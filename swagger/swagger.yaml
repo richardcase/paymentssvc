@@ -1,0 +1,285 @@
+swagger: "2.0"
+info:
+  description: "This is a sample Payments API"
+  version: "0.0.1"
+  title: "Payments API"
+  contact:
+    email: "fruitcase@pm.me"
+basePath: "/"
+tags:
+- name: "payment"
+  description: "Everything related to payments"
+- name: "probes"
+  description: "Endpoints related to k8s probes"
+- name: "metrics"
+  description: "Operations related to metrics"
+schemes:
+- "https"
+- "http"
+paths:
+  /payments:
+    post:
+      tags:
+      - "payment"
+      summary: "Creates a new payment"
+      description: ""
+      operationId: "addPayment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Payment attributes object for the new payment"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentAttributes"
+      responses:
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/Error" 
+        201:
+          description: "Payment has been created"
+          headers:
+            Location:
+              type: "string"
+              description: "The location to retrieve the payment instance"
+    get:
+      tags:
+      - "payment"
+      summary: "Get a list of payments"
+      description: ""
+      operationId: "listPayments"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Payment"
+        400:
+          description: "Invalid status value"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /payments/{id}:
+    get:
+      tags:
+      - "payment"
+      summary: "Find a payment by ID"
+      description: "Returns a single payment"
+      operationId: "getPaymentById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of payment to return"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "payment was found"
+          schema:
+            $ref: "#/definitions/Payment"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Payment not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - "payment"
+      summary: "Update an existing payment"
+      description: ""
+      operationId: "updatePayment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of payment to update"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Payment attributes object that needs to be updated"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentAttributes"
+      responses:
+        200:
+          description: "Payment was updated successfully"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Payment not found"
+          schema:
+            $ref: "#/definitions/Error"
+        405:
+          description: "Validation exception"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - "payment"
+      summary: "Delete an existing payment"
+      description: ""
+      operationId: "deletePayment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of payment to update"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        204:
+          description: "Payment was deleted succesfully"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Payment not found"
+          schema:
+            $ref: "#/definitions/Error"
+        405:
+          description: "Validation exception"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /live:
+    get:
+      tags:
+      - "probes"
+      summary: "Is the service alive"
+      description: ""
+      operationId: "getLive"
+      produces:
+      - "text/plain"
+      responses:
+        200:
+          description: "service is alive"
+        400:
+          description: "service isn't alive"
+  /ready:
+    get:
+      tags:
+      - "probes"
+      summary: "Is the service able to serve traffic"
+      description: ""
+      operationId: "getReady"
+      produces:
+      - "text/plain"
+      responses:
+        200:
+          description: "service is ready"
+        400:
+          description: "service isn't ready"
+definitions:
+  Party:
+    type: "object"
+    properties:
+      account_name:
+        type: "string"
+      account_number:
+        type: "string"
+  PaymentAttributes:
+    type: "object"
+    required:
+      - "amount"
+      - "currency"
+      - "payment_type"
+      - "payment_scheme"
+      - "beneficiary_party"
+      - "debtor_party"
+    properties:
+      amount:
+        type: "number"
+        format: "float"
+      currency:
+        type: "string"
+      payment_type:
+        type: "string"
+        enum:
+        - "Credit"
+        - "Debit"
+      payment_scheme:
+        type: "string"
+        description: "Which payment scheme are we using"
+        enum:
+        - "FPS"
+        - "BACS"
+        - "CHAPS"
+        - "SEPA"
+      beneficiary_party:
+        $ref: '#/definitions/Party' 
+      debtor_party:
+        $ref: '#/definitions/Party' 
+  Payment:
+    type: "object"
+    required:
+      - "id"
+      - "version"
+      - "organisation_id"
+      - "attributes"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      version:
+        type: "integer"
+        format: "int32"
+      organisation_id:
+        type: "string"
+        format: "uuid"
+      attributes:
+        $ref: '#/definitions/PaymentAttributes'
+  Error:
+    type: "object"
+    required:
+      - "message"
+    properties:
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about the service"
+  url: "https://github.com/richardcase/paymentsapi/blob/master/docs/design.md"

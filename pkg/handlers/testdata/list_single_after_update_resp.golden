@@ -1,0 +1,21 @@
+[
+  {
+    "attributes": {
+        "amount": 300,
+        "beneficiary_party": {
+            "account_name": "Test1",
+            "account_number": "12345"
+        },
+        "currency": "GBP",
+        "debtor_party": {
+            "account_name": "Test2",
+            "account_number": "56789"
+        },
+        "payment_scheme": "FPS",
+        "payment_type": "Credit"
+    },
+    "id": "bae9aa62-0ea1-432b-baee-c0ff4b1d889e",
+    "organisation_id": "00000000-0000-0000-0000-000000000000",
+    "version": 2
+  }
+]

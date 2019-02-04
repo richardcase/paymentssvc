@@ -1,0 +1,14 @@
+{
+  "amount": 300,
+  "currency": "GBP",
+  "payment_type": "Credit",
+  "payment_scheme": "FPS",
+  "beneficiary_party": {
+    "account_name": "Test 1",
+    "account_number": "123456"
+  },
+  "debtor_party": {
+    "account_name": "Test 2",
+    "account_number": "67890"
+  }
+}

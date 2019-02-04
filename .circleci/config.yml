@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  test-build-only:
+    docker:
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: |
+            go get github.com/mattn/goveralls
+            curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.13.2
+            sudo cp ./bin/golangci-lint $GOPATH/bin/
+      - run:
+          name: Run tests & lint
+          command: |
+            make ci
+            /go/bin/goveralls -coverprofile=~/project/coverage.out -service=circle-ci
+      - run:
+          name: Run build
+          command: make release
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+
+workflows:
+  version: 2
+  any-commit:
+    jobs:
+      - test-build-only:
+          filters:
+            tags:
+              ignore: /.*/
+#  release:
+#    jobs:
+#    - build:
+#        context: prod
+#        filters:
+#          tags:
+#            only: /.*/
+#          branches:
+#            ignore: master
+#    - deploy:
+#        requires: [build]
+#        filters:
+#          branches:
+#            only: master

@@ -18,7 +18,7 @@ jobs:
           name: Run tests & lint
           command: |
             make ci
-            /go/bin/goveralls -coverprofile=~/project/coverage.out -service=circle-ci
+            /go/bin/goveralls -coverprofile=coverage.out -service=circle-ci
       - run:
           name: Run build
           command: make release

@@ -9,7 +9,7 @@ This a sample that implements a rudimentary payments service. It has:
 
 To learn more about the design go [here](docs/design.md).
 
-> There are some issues with the current implementation and with hindsight go-swagger wouldn't be used and if we were going to use CQRS/ES then we would need to split the service into separate write/read services and probably use Kakfa Streams instead as its more appropriate.
+> There are some **major** issues with the current implementation and with hindsight go-swagger wouldn't be used and if we were going to use CQRS/ES then we would need to split the service into separate write/read services and probably use Kakfa Streams instead as its more appropriate.
 
 ## Running Locally
 
@@ -19,7 +19,7 @@ To run locally you need to run Mongo:
 docker run -d --name mongo -p 27017:27017 mongo:latest
 ```
 
-Then run and run the payments service:
+Then build and run the payments service:
 
 ```bash
 make build
@@ -34,5 +34,6 @@ The following are areas for future work:
 * [ ] Create Kubernetes artefacts for deployment
 * [ ] Add CircleCI workflow to build &b publish docker image
 * [ ] Authentication & Authorization
+* [ ] A bunch of other stuff listed in the design
 
 

@@ -11,7 +11,7 @@ To learn more about the design go [here](docs/design.md).
 
 > There are some **major** issues with the current implementation and with hindsight go-swagger wouldn't be used and if we were going to use CQRS/ES then we would need to split the service into separate write/read services and probably use Kakfa Streams instead as its more appropriate.
 
-** A new simpler versioning build using AWS Lambda can be found [here](https://github.com/richardcase/paymentssvc). **
+** A new simpler versioning build using AWS Lambda can be found [here](https://github.com/richardcase/paymentsvc). **
 
 ## Running Locally
 
